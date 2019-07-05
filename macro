@@ -1,0 +1,58 @@
+Sub Correct()
+'open 2 workbooks
+Dim Goal As New Excel.Application
+Dim Source As New Excel.Application
+Dim c As Range
+Dim c2 As Range
+Dim d As Integer
+Dim d2 As Integer
+Dim str3 As String
+Dim ch4 As Integer
+Dim str1 As String
+Goal.Workbooks.Open "E:\C\Docs\COMPARE\1#_EVDO_LTHV_F.xls"
+Source.Workbooks.Open "E:\C\Docs\COMPARE\1_F_F.xls"
+
+'查找目标表格的第10列的值为fail的行数
+'获得对应行数的第3列和第4列的值
+'查找来源表格的第3列第4列与上面所述相匹配的值所在的行数
+'复制至目标表格对应的行数
+For Each c In Goal.Sheets(1).Range("J2", "J1000").Cells
+    If c.Value = "FAIL" Then
+        d = c.Row
+        str3 = Goal.Sheets(1).Cells(d, 3).Value
+        ch4 = Goal.Sheets(1).Cells(d, 4).Value
+        str1 = Goal.Sheets(1).Cells(d, 1).Value
+        For Each c2 In Source.Sheets(1).Range("c2", "c1000").Cells
+            If c2.Value = str3 Then
+                d2 = c2.Row
+                If Source.Sheets(1).Cells(d2, 4).Value = ch4 Then
+                    If Source.Sheets(1).Cells(d2, 10).Value = "PASS" Then
+                        If Source.Sheets(1).Cells(d2, 1).Value = Mid(str1, 2, Len(str1) - 1) Then
+                            MsgBox (Source.Sheets(1).Cells(d2, 9))
+                            Source.Sheets(1).Cells(d2, 3).Copy
+                            Goal.Sheets(1).Cells(d, 3).PasteSpecial Paste:=xlPasteValues
+                            Source.Sheets(1).Cells(d2, 1).Copy
+                            Goal.Sheets(1).Cells(d, 1).PasteSpecial Paste:=xlPasteValues
+                            Source.Sheets(1).Cells(d2, 2).Copy
+                            Goal.Sheets(1).Cells(d, 2).PasteSpecial Paste:=xlPasteValues
+                            Source.Sheets(1).Cells(d2, 9).Copy
+                            Goal.Sheets(1).Cells(d, 9).PasteSpecial Paste:=xlPasteValues
+                            Source.Sheets(1).Cells(d2, 10).Copy
+                            Goal.Sheets(1).Cells(d, 10).PasteSpecial Paste:=xlPasteValues
+                        End If
+                    End If
+                End If
+            End If
+        Next
+    End If
+Next
+
+MsgBox ("Hello")
+
+Goal.Quit
+Source.Quit
+Set Goal = Nothing
+Set Source = Nothing
+Workbooks.Close
+
+End Sub
